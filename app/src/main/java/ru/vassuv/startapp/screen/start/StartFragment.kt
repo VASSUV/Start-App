@@ -9,9 +9,13 @@ import ru.vassuv.startapp.R
 import ru.vassuv.startapp.utils.atlibrary.BaseFragment
 
 import com.arellomobile.mvp.presenter.InjectPresenter
+import kotlinx.android.synthetic.main.fragment_start.*
 import kotlinx.coroutines.experimental.*
 import kotlinx.coroutines.experimental.android.UI
 import ru.vassuv.startapp.fabric.FrmFabric
+import ru.vassuv.startapp.utils.atlibrary.json.JsonObject
+import ru.vassuv.startapp.utils.atlibrary.response
+import ru.vassuv.startapp.utils.atlibrary.responseJson
 
 class StartFragment : BaseFragment(), StartView {
     override val type = FrmFabric.START
@@ -32,22 +36,24 @@ class StartFragment : BaseFragment(), StartView {
         return inflater.inflate(R.layout.fragment_start, container, false)
     }
 
+    private lateinit var progress: ProgressBar
+
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        progress = activity.findViewById(R.id.progress)
     }
 
     private lateinit var job: Job
 
     override fun onStart() {
         super.onStart()
-        val progress = activity.findViewById<ProgressBar>(R.id.progress)
 
         job = launch(UI) {
-            progress.visibility = View.VISIBLE
-
             try {
-                withContext(CommonPool) { Thread.sleep(5000) }
+                progress.visibility = View.VISIBLE
+                val result = responseJson("https://vassuv.ru/api/v1/register/", hashMapOf())
+                textView.text = result.toString()
             } finally {
                 progress.visibility = View.GONE
             }
@@ -57,10 +63,6 @@ class StartFragment : BaseFragment(), StartView {
     override fun onStop() {
         super.onStop()
 
-        if (!job.isCompleted) {
-            runBlocking {
-                job.cancelAndJoin()
-            }
-        }
+        job.cancel()
     }
 }

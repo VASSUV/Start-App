@@ -26,18 +26,18 @@ class MainActivity : MvpAppCompatActivity(), MainView {
 
     override fun onStart() {
         super.onStart()
-        presenter?.onStart()
+        presenter.onStart()
     }
 
 
     override fun onResume() {
         super.onResume()
-        presenter?.onResume()
+        presenter.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        presenter?.onPause()
+        presenter.onPause()
     }
 
     override fun onBackPressed() {
@@ -63,7 +63,7 @@ class MainActivity : MvpAppCompatActivity(), MainView {
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
-        presenter?.onSaveInstanceState(outState)
+        presenter.onSaveInstanceState(outState)
     }
 
     fun showBottomNavigationView() {

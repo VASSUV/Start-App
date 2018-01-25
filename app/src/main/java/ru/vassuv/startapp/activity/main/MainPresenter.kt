@@ -27,7 +27,8 @@ class MainPresenter : MvpPresenter<MainView>() {
         get() = OnNavigationItemSelectedListener { item ->
 
             fun startScreen(name: String): Boolean {
-                Router.newRootScreen(name)
+                if(name != currentType.name)
+                    Router.newRootScreen(name)
                 return true
             }
 
