@@ -9,6 +9,7 @@ import kotlinx.android.synthetic.main.fragment_start.*
 import ru.vassuv.startapp.R
 import ru.vassuv.startapp.fabric.FrmFabric
 import ru.vassuv.startapp.utils.atlibrary.BaseFragment
+import android.support.v7.widget.LinearLayoutManager
 
 class StartFragment : BaseFragment(), StartView {
     override val type = FrmFabric.START
@@ -31,9 +32,10 @@ class StartFragment : BaseFragment(), StartView {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = presenter.getAdapter()
     }
 
     override fun setText(text: String) {
-        textView.text = text
     }
 }

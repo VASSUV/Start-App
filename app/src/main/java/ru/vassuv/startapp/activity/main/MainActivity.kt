@@ -15,6 +15,12 @@ import ru.vassuv.startapp.R
 import ru.vassuv.startapp.utils.UiListener
 
 import ru.vassuv.startapp.utils.atlibrary.BaseFragment
+import android.widget.TextView
+import android.view.Gravity
+import android.R.attr.gravity
+import android.graphics.Color
+import android.widget.FrameLayout
+
 
 class MainActivity : MvpAppCompatActivity(), MainView {
     @InjectPresenter
@@ -22,10 +28,18 @@ class MainActivity : MvpAppCompatActivity(), MainView {
 
     private val uiListener: UiListener
         get() = object : UiListener {
-//            val snackBar = Snackbar(container)
+            val snackBar = Snackbar.make(container, "", Snackbar.LENGTH_LONG)
+
+            init {
+                val view = snackBar.view
+                view.setBackgroundColor(Color.RED)
+                val mainTextView: TextView = view.findViewById(android.support.design.R.id.snackbar_text)
+                mainTextView.setTextColor(Color.WHITE)
+            }
 
             override fun showMessage(message: String) {
-                Snackbar.make(container, message, Snackbar.LENGTH_LONG).show()
+                snackBar.setText(message)
+                snackBar.show()
             }
 
             override fun showLoader() {

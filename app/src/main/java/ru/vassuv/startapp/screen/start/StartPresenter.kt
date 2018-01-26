@@ -1,34 +1,58 @@
 package ru.vassuv.startapp.screen.start
 
+import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
+import ru.vassuv.startapp.R
+import ru.vassuv.startapp.fabric.FrmFabric
 import ru.vassuv.startapp.utils.Router
-import ru.vassuv.startapp.utils.atlibrary.responseJson
 
 @InjectViewState
 class StartPresenter : MvpPresenter<StartView>() {
-    private lateinit var job: Job
+    val list = arrayListOf(FrmFabric.INTRO.name,
+            FrmFabric.SPLASH.name)
+
+    val listener: IClickListener = object : IClickListener{
+        override fun onClick(id: Int) {
+            Router.navigateTo(list[id])
+        }
+    }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        job = launch(UI) {
-            try {
-                Router.uiListener.showLoader()
-                val result = responseJson("https://vassuv.ru/api/v1/register/", hashMapOf(), true)
-                viewState.setText(result.toString())
-                if (result.error.status > 0)
-                    Router.uiListener.showMessage(result.error.message ?: "")
-            } finally {
-                Router.uiListener.hideLoader()
-            }
-        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        job.cancel()
+    }
+
+    fun getAdapter() = Adapter()
+
+    interface IClickListener {
+        fun onClick(id: Int)
+    }
+
+    inner class Adapter : RecyclerView.Adapter<Adapter.Holder>() {
+        override fun onBindViewHolder(holder: Holder?, position: Int) {
+            holder?.textView?.text = list[position]
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
+            return Holder(LayoutInflater.from(parent.context).inflate(R.layout.item_start, parent, false))
+        }
+
+        override fun getItemCount(): Int = list.size
+
+        inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+            val textView: TextView = itemView.findViewById(R.id.textView)
+
+            init {
+                textView.setOnClickListener { listener.onClick(layoutPosition) }
+            }
+        }
     }
 }
