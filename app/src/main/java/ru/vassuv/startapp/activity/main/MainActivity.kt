@@ -1,26 +1,61 @@
 package ru.vassuv.startapp.activity.main
 
 import android.os.Bundle
+import android.os.Message
 import android.support.annotation.IdRes
+import android.support.design.widget.Snackbar
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import com.arellomobile.mvp.MvpAppCompatActivity
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.vassuv.startapp.R
+import ru.vassuv.startapp.utils.UiListener
 
 import ru.vassuv.startapp.utils.atlibrary.BaseFragment
+import android.widget.TextView
+import android.view.Gravity
+import android.R.attr.gravity
+import android.graphics.Color
+import android.widget.FrameLayout
+
 
 class MainActivity : MvpAppCompatActivity(), MainView {
     @InjectPresenter
     lateinit var presenter: MainPresenter
 
+    private val uiListener: UiListener
+        get() = object : UiListener {
+            val snackBar = Snackbar.make(container, "", Snackbar.LENGTH_LONG)
+
+            init {
+                val view = snackBar.view
+                view.setBackgroundColor(Color.RED)
+                val mainTextView: TextView = view.findViewById(android.support.design.R.id.snackbar_text)
+                mainTextView.setTextColor(Color.WHITE)
+            }
+
+            override fun showMessage(message: String) {
+                snackBar.setText(message)
+                snackBar.show()
+            }
+
+            override fun showLoader() {
+                progress.visibility = View.VISIBLE
+            }
+
+            override fun hideLoader() {
+                progress.visibility = View.GONE
+            }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        presenter.onCreate(supportFragmentManager, savedInstanceState)
+        presenter.onCreate(supportFragmentManager, savedInstanceState, uiListener)
         navigation.setOnNavigationItemSelectedListener(presenter.onNavigationItemSelectedListener)
     }
 
