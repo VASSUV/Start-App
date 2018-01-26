@@ -55,11 +55,14 @@ class MainPresenter : MvpPresenter<MainView>() {
         currentType = fragment.type
 
         when (currentType) {
-            FrmFabric.START -> {
+            FrmFabric.EMPTY -> {
             }
             FrmFabric.INTRO -> {
             }
             FrmFabric.SPLASH -> {
+                viewState.hideBottomNavigator()
+            }
+            FrmFabric.START -> {
             }
         }
     }

@@ -70,7 +70,7 @@ class MainActivity : MvpAppCompatActivity(), MainView {
         navigation.visibility = View.VISIBLE
     }
 
-    fun hideBottomNavigationView() {
+    override fun hideBottomNavigator() {
         navigation.visibility = View.GONE
     }
 

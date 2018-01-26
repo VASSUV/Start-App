@@ -47,18 +47,21 @@ class StartFragment : BaseFragment(), StartView {
             progress.visibility = View.VISIBLE
 
             try {
-                withContext(CommonPool) { Thread.sleep(5000) }
+                request()
             } finally {
                 progress.visibility = View.GONE
             }
         }
     }
 
+    private suspend fun request() =  withContext(CommonPool) { Thread.sleep(5000) }
+
     override fun onStop() {
         super.onStop()
 
         if (!job.isCompleted) {
             runBlocking {
+                job.cancelChildren()
                 job.cancelAndJoin()
             }
         }
