@@ -11,7 +11,8 @@ import ru.vassuv.startapp.R
 import ru.vassuv.startapp.fabric.FrmFabric
 import ru.vassuv.startapp.utils.atlibrary.BaseFragment
 import ru.vassuv.startapp.utils.atlibrary.Navigator
-import ru.vassuv.startapp.utils.atlibrary.Router
+import ru.vassuv.startapp.utils.Router
+import ru.vassuv.startapp.utils.UiListener
 import java.io.Serializable
 
 @InjectViewState
@@ -65,7 +66,7 @@ class MainPresenter : MvpPresenter<MainView>() {
         }
     }
 
-    fun onCreate(fragmentManager: FragmentManager, savedInstanceState: Bundle?) {
+    fun onCreate(fragmentManager: FragmentManager, savedInstanceState: Bundle?, uiListener: UiListener) {
         this.fragmentManager = fragmentManager
 
         Router.onNewRootScreenListener = { screenKey ->
@@ -73,13 +74,10 @@ class MainPresenter : MvpPresenter<MainView>() {
 
         Router.onBackScreenListener = { }
 
-        navigator = object : Navigator(fragmentManager, R.id.fragment_container, changedFragmentListener) {
-            override fun createFragment(screenKey: String, data: Bundle): Fragment? {
-                return FrmFabric.valueOf(screenKey).create(data)
-            }
+        Router.uiListener = uiListener
 
-            override fun showSystemMessage(message: String) {
-            }
+        navigator = object : Navigator(fragmentManager, R.id.fragment_container, changedFragmentListener) {
+            override fun createFragment(screenKey: String, data: Bundle) = FrmFabric.valueOf(screenKey).create(data)
 
             override fun exit() {
             }

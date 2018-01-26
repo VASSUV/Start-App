@@ -10,17 +10,19 @@ import ru.vassuv.startapp.utils.atlibrary.json.JsonObject
 import java.net.UnknownHostException
 import kotlin.coroutines.experimental.suspendCoroutine
 
+
 data class Response<T>(val result: T?,
                        val error: Error = ERROR_EMPTY)
 
-open class Error(override val message: String? = null) : Exception()
+open class Error(open val status: Int = 0,
+        override val message: String? = null) : Exception()
 
-data class RequestError(val status: Int = 0,
-                        override val message: String? = null) : Error(message)
+data class RequestError(override val status: Int = 0,
+                        override val message: String? = null) : Error(status, message)
 
-data class ResponseError(val status: Int,
+data class ResponseError(override val status: Int,
                          override val message: String? = null,
-                         val errorBody: String? = null) : Error(message)
+                         val errorBody: String? = null) : Error(status, message)
 
 val ERROR_EMPTY = RequestError()
 val ERROR_INTERNET_NOT_FOUND = RequestError(800, "Отсутсвует интернет соединение")
@@ -28,14 +30,22 @@ val ERROR_TIMEOUT = RequestError(900, "Превышено время ожида�
 val ERROR = RequestError(1000, "Произошла ошибка")
 
 suspend fun CoroutineScope.responseJson(host: String,
-                                        params: Map<String, String> = hashMapOf()
-): Response<JsonObject> = response(host, params, { JsonObject.readFrom(it) })
+                                        params: Map<String, String> = hashMapOf(),
+                                        isCheckError: Boolean
+): Response<JsonObject> = response(host, params, { response ->
+    JsonObject.readFrom(response).apply {
+        if(isCheckError) {
+            val status = this.int("status") ?: 0
+            if(status > 0) throw ResponseError(status, this.string("message"), this["meta"].toString())
+        }
+    }
+})
 
-suspend fun CoroutineScope.response(host: String,
+suspend fun response(host: String,
                                     params: Map<String, String> = hashMapOf()
 ): Response<String> = response(host, params, { it })
 
-suspend fun <T> CoroutineScope.response(host: String,
+suspend fun <T> response(host: String,
                                         params: Map<String, String> = hashMapOf(),
                                         postDelay: suspend (String) -> T?
 ): Response<T> {
@@ -48,7 +58,7 @@ suspend fun <T> CoroutineScope.response(host: String,
         }
     }
 
-    delay(1000)
+//    delay(1000)
     job.join()
     return result ?: Response<T>(null, ERROR_EMPTY)
 }

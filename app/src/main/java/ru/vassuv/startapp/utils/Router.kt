@@ -1,4 +1,4 @@
-package ru.vassuv.startapp.utils.atlibrary
+package ru.vassuv.startapp.utils
 
 import android.os.Bundle
 import ru.terrakok.cicerone.BaseRouter
@@ -7,6 +7,7 @@ import ru.terrakok.cicerone.commands.*
 object Router: BaseRouter() {
     lateinit var onNewRootScreenListener: ((screenKey: String) -> Unit)
     lateinit var onBackScreenListener: () -> Unit
+    lateinit var uiListener: UiListener
 
     fun navigateTo(screenKey: String) = navigateTo(screenKey, Bundle())
     fun replaceScreen(screenKey: String) = replaceScreen(screenKey, Bundle())

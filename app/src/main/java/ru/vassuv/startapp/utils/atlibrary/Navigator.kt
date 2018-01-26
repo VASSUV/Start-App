@@ -72,10 +72,6 @@ protected constructor(private val fragmentManager: FragmentManager,
                     screenNames = ArrayList(screenNames.subList(0,
                             fragmentManager.backStackEntryCount + 1))
             }
-            is SystemMessage -> {
-                showSystemMessage(command.message)
-                return
-            }
         }
         val lastFragment = screenNames.lastOrNull()
         if(lastFragment!= null) openFragment(lastFragment)
@@ -96,8 +92,6 @@ protected constructor(private val fragmentManager: FragmentManager,
     }
 
     protected abstract fun createFragment(screenKey: String, data: Bundle): Fragment?
-
-    protected abstract fun showSystemMessage(message: String)
 
     protected abstract fun exit()
 
