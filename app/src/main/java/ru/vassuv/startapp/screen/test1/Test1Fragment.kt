@@ -25,6 +25,8 @@ import android.support.v4.app.ActivityOptionsCompat
 import android.content.Intent
 import android.os.Build
 import android.support.annotation.RequiresApi
+import android.support.transition.TransitionManager
+import com.transitionseverywhere.Rotate
 
 
 class Test1Fragment : BaseFragment(), Test1View {
@@ -56,7 +58,7 @@ class Test1Fragment : BaseFragment(), Test1View {
     }
 
     private fun initExample3() {
-        beginDelayedTransition(container3, TextColorTransition())
+        TransitionManager.beginDelayedTransition(container3, TextColorTransition())
         button3.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 Router.navigateToWithAnimate(FrmFabric.TEST2.name) {

@@ -15,43 +15,40 @@ object Router: BaseRouter() {
     lateinit var onBackScreenListener: () -> Unit
     lateinit var uiListener: UiListener
 
-    fun backTo(screenKey: String) = executeCommand(BackTo(screenKey))
+    fun backTo(screenKey: String) = executeCommands(BackTo(screenKey))
 
-    fun navigateTo(screenKey: String, data: Any? = Bundle()) = executeCommand(Forward(screenKey, data))
+    fun navigateTo(screenKey: String, data: Any? = Bundle()) = executeCommands(Forward(screenKey, data))
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @TargetApi(Build.VERSION_CODES.KITKAT)
     fun navigateToWithAnimate(screenKey: String,  animate: FragmentTransaction.() -> Unit) {
-        executeCommand(AnimateForward(screenKey, Bundle(), animate))
+        executeCommands(AnimateForward(screenKey, Bundle(), animate))
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @TargetApi(Build.VERSION_CODES.KITKAT)
     fun navigateToWithAnimate(screenKey: String, data: Any?, animate: FragmentTransaction.() -> Unit) {
-        executeCommand(AnimateForward(screenKey, data, animate))
+        executeCommands(AnimateForward(screenKey, data, animate))
     }
 
-    fun replaceScreen(screenKey: String, data: Any? = Bundle()) = executeCommand(Replace(screenKey, data))
+    fun replaceScreen(screenKey: String, data: Any? = Bundle()) = executeCommands(Replace(screenKey, data))
 
     fun newScreenChain(screenKey: String, data: Any? = Bundle()) {
-        executeCommand(BackTo(null))
-        executeCommand(Forward(screenKey, data))
+        executeCommands(BackTo(null), Forward(screenKey, data))
     }
 
     fun newRootScreen(screenKey: String, data: Any? = Bundle()) {
-        executeCommand(BackTo(null))
-        executeCommand(Replace(screenKey, data))
+        executeCommands(BackTo(null), Replace(screenKey, data))
         onNewRootScreenListener(screenKey)
     }
 
     fun exit() {
         onBackScreenListener()
-        executeCommand(Back())
+        executeCommands(Back())
     }
 
     fun exitWithMessage(message: String) {
-        executeCommand(Back())
-        executeCommand(SystemMessage(message))
+        executeCommands(Back(), SystemMessage(message))
     }
 }
 

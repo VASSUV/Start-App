@@ -5,6 +5,7 @@ import android.support.design.widget.BottomNavigationView.OnNavigationItemSelect
 import android.support.v4.app.FragmentManager
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
+import ru.terrakok.cicerone.commands.Command
 import ru.vassuv.startapp.App
 import ru.vassuv.startapp.R
 import ru.vassuv.startapp.fabric.FrmFabric
@@ -59,12 +60,15 @@ class MainPresenter : MvpPresenter<MainView>() {
         when (currentType) {
             FrmFabric.INTRO -> {
                 viewState.showBottomNavigatorView()
+                viewState.changeTab(R.id.navigation_notifications)
             }
             FrmFabric.SPLASH -> {
                 viewState.showBottomNavigatorView()
+                viewState.changeTab(R.id.navigation_dashboard)
             }
             FrmFabric.START -> {
                 viewState.showBottomNavigatorView()
+                viewState.changeTab(R.id.navigation_home)
             }
             else -> {
                 viewState.hideBottomNavigatorView()
@@ -83,6 +87,7 @@ class MainPresenter : MvpPresenter<MainView>() {
         Router.uiListener = uiListener
 
         navigator = object : Navigator(fragmentManager, R.id.fragment_container, changedFragmentListener) {
+
             override fun createFragment(screenKey: String, data: Bundle) = FrmFabric.valueOf(screenKey).create(data)
 
             override fun exit() {

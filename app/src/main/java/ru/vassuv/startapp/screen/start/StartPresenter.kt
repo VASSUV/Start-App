@@ -52,9 +52,10 @@ class StartPresenter : MvpPresenter<StartView>() {
         inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val textView: TextView = itemView.findViewById(R.id.textView)
             private val button: View = itemView.findViewById(R.id.shared_view)
+            private val shared: View = itemView.findViewById(R.id.shared_button)
 
             init {
-                button.setOnClickListener { listener.onClick(layoutPosition, button) }
+                button.setOnClickListener { listener.onClick(layoutPosition, shared) }
             }
         }
     }

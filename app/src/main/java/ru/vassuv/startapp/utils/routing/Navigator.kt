@@ -3,6 +3,7 @@ package ru.vassuv.startapp.utils.routing
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentTransaction
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.commands.*
 import ru.vassuv.startapp.utils.atlibrary.Logger
@@ -18,77 +19,74 @@ protected constructor(private val fragmentManager: FragmentManager,
         fragmentManager.addOnBackStackChangedListener { onChangeFragment() }
     }
 
-    override fun applyCommand(command: Command) {
-        when (command) {
-            is Forward -> {
-                fragmentManager
-                        .beginTransaction()
-                        .replace(containerId, createFragment(command.screenKey, command.transitionData as Bundle))
-                        .addToBackStack(command.screenKey)
-                        .commit()
-                screenNames.add(command.screenKey)
-            }
-            is AnimateForward -> {
-                fragmentManager
-                        .beginTransaction()
-                        .replace(containerId, createFragment(command.screenKey, command.transitionData as Bundle))
-                        .apply {
-                            command.animate.invoke(this)
-                        }
-                        .addToBackStack(command.screenKey)
-                        .commit()
-                screenNames.add(command.screenKey)
-            }
-            is Back -> {
-                if (fragmentManager.backStackEntryCount > 0)
-                    fragmentManager.popBackStackImmediate()
-                else
-                    exit()
-
-                if (screenNames.size > 0)
-                    screenNames.removeAt(screenNames.size - 1)
-            }
-            is Replace -> {
-                if (fragmentManager.backStackEntryCount > 0) {
-                    fragmentManager.popBackStackImmediate()
+    private fun FragmentTransaction.applyCommands(commands: Array<out Command>?): FragmentTransaction {
+        commands?.forEach { command ->
+            when (command) {
+                is Forward -> {
+                    replace(containerId, createFragment(command.screenKey, command.transitionData as Bundle))
+                    addToBackStack(command.screenKey)
+                    screenNames.add(command.screenKey)
                 }
-                fragmentManager
-                        .beginTransaction()
-                        .replace(containerId, createFragment(command.screenKey, command.transitionData as Bundle))
-                        .addToBackStack(command.screenKey)
-                        .commit()
+                is AnimateForward -> {
+                    replace(containerId, createFragment(command.screenKey, command.transitionData as Bundle))
+                    apply {
+                        command.animate.invoke(this)
+                    }
+                    addToBackStack(command.screenKey)
+                    screenNames.add(command.screenKey)
+                }
+                is Back -> {
+                    if (fragmentManager.backStackEntryCount > 0)
+                        fragmentManager.popBackStackImmediate()
+                    else
+                        exit()
 
-                if (screenNames.size > 0)
-                    screenNames.removeAt(screenNames.size - 1)
-                screenNames.add(command.screenKey)
-            }
-            is BackTo -> {
-                val key = command.screenKey
+                    if (screenNames.size > 0)
+                        screenNames.removeAt(screenNames.size - 1)
+                }
+                is Replace -> {
+                    if (fragmentManager.backStackEntryCount > 0) {
+                        fragmentManager.popBackStackImmediate()
+                    }
+                    replace(containerId, createFragment(command.screenKey, command.transitionData as Bundle))
+                    addToBackStack(command.screenKey)
 
-                if (key == null) {
-                    backToRoot()
-                    screenNames.clear()
-                } else {
-                    var hasScreen = false
-                    for (i in 0 until fragmentManager.backStackEntryCount) {
-                        if (key == fragmentManager.getBackStackEntryAt(i).name) {
-                            fragmentManager.popBackStackImmediate(key, 0)
-                            hasScreen = true
-                            break
+                    if (screenNames.size > 0)
+                        screenNames.removeAt(screenNames.size - 1)
+                    screenNames.add(command.screenKey)
+                }
+                is BackTo -> {
+                    val key = command.screenKey
+
+                    if (key == null) {
+                        backToRoot()
+                        screenNames.clear()
+                    } else {
+                        var hasScreen = false
+                        for (i in 0 until fragmentManager.backStackEntryCount) {
+                            if (key == fragmentManager.getBackStackEntryAt(i).name) {
+                                fragmentManager.popBackStackImmediate(key, 0)
+                                hasScreen = true
+                                break
+                            }
+                        }
+                        if (!hasScreen) {
+                            backToUnexisting()
                         }
                     }
-                    if (!hasScreen) {
-                        backToUnexisting()
-                    }
+                    if (screenNames.size > 0)
+                        screenNames = ArrayList(screenNames.subList(0,
+                                fragmentManager.backStackEntryCount + 1))
                 }
-                if (screenNames.size > 0)
-                    screenNames = ArrayList(screenNames.subList(0,
-                            fragmentManager.backStackEntryCount + 1))
             }
         }
-        val lastFragment = screenNames.lastOrNull()
-        if(lastFragment!= null) openFragment(screenNames.size - 1, lastFragment)
+        return this
+    }
 
+    override fun applyCommands(commands: Array<out Command>?) {
+        fragmentManager.beginTransaction().applyCommands(commands).commit()
+        val lastFragment = screenNames.lastOrNull()
+        if (lastFragment != null) openFragment(screenNames.size - 1, lastFragment)
         printScreensScheme()
     }
 
