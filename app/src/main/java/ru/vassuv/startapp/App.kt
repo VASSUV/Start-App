@@ -4,8 +4,8 @@ import android.app.Application
 import android.content.Context
 import ru.terrakok.cicerone.Cicerone
 import ru.vassuv.startapp.utils.atlibrary.Logger
-import ru.vassuv.startapp.utils.atlibrary.Navigator
-import ru.vassuv.startapp.utils.Router
+import ru.vassuv.startapp.utils.routing.Navigator
+import ru.vassuv.startapp.utils.routing.Router
 
 class App(val cicerone: Cicerone<Router> = Cicerone.create(Router)) : Application() {
 

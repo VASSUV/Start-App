@@ -2,12 +2,6 @@ package ru.vassuv.startapp.screen.splash
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
-import ru.vassuv.startapp.screen.splash.SplashView
-import ru.vassuv.startapp.utils.Router
-import ru.vassuv.startapp.utils.atlibrary.responseJson
 
 @InjectViewState
 class SplashPresenter : MvpPresenter<SplashView>() {

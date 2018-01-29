@@ -2,7 +2,6 @@ package ru.vassuv.startapp.activity.main
 
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView.OnNavigationItemSelectedListener
-import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
@@ -10,8 +9,8 @@ import ru.vassuv.startapp.App
 import ru.vassuv.startapp.R
 import ru.vassuv.startapp.fabric.FrmFabric
 import ru.vassuv.startapp.utils.atlibrary.BaseFragment
-import ru.vassuv.startapp.utils.atlibrary.Navigator
-import ru.vassuv.startapp.utils.Router
+import ru.vassuv.startapp.utils.routing.Navigator
+import ru.vassuv.startapp.utils.routing.Router
 import ru.vassuv.startapp.utils.UiListener
 import java.io.Serializable
 
@@ -56,15 +55,19 @@ class MainPresenter : MvpPresenter<MainView>() {
 
         currentType = fragment.type
 
+        viewState.setTitle(currentType.name)
         when (currentType) {
-            FrmFabric.EMPTY -> {
-            }
             FrmFabric.INTRO -> {
+                viewState.showBottomNavigatorView()
             }
             FrmFabric.SPLASH -> {
-                viewState.hideBottomNavigator()
+                viewState.showBottomNavigatorView()
             }
             FrmFabric.START -> {
+                viewState.showBottomNavigatorView()
+            }
+            else -> {
+                viewState.hideBottomNavigatorView()
             }
         }
     }
@@ -85,7 +88,8 @@ class MainPresenter : MvpPresenter<MainView>() {
             override fun exit() {
             }
 
-            override fun openFragment(name: String) {
+            override fun openFragment(position: Int, name: String) {
+                if (position == 0) viewState.hideBackButton() else viewState.showBackButton()
             }
         }
 

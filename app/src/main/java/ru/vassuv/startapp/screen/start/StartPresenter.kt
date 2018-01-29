@@ -1,5 +1,7 @@
 package ru.vassuv.startapp.screen.start
 
+import android.os.Build
+import android.support.v4.view.ViewCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -7,33 +9,33 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
+import kotlinx.android.synthetic.main.fragment_test1.*
 import ru.vassuv.startapp.R
 import ru.vassuv.startapp.fabric.FrmFabric
-import ru.vassuv.startapp.utils.Router
+import ru.vassuv.startapp.utils.routing.Router
+
 
 @InjectViewState
 class StartPresenter : MvpPresenter<StartView>() {
-    val list = arrayListOf(FrmFabric.INTRO.name,
-            FrmFabric.SPLASH.name)
+    val list = arrayListOf(FrmFabric.TEST1.name,
+            FrmFabric.TEST2.name)
 
-    val listener: IClickListener = object : IClickListener{
-        override fun onClick(id: Int) {
-            Router.navigateTo(list[id])
+    val listener: IClickListener = object : IClickListener {
+        override fun onClick(id: Int, v: View) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                Router.navigateToWithAnimate(list[id]) {
+                    addSharedElement(v, ViewCompat.getTransitionName(v))
+                }
+            } else {
+                Router.navigateTo(list[id])
+            }
         }
-    }
-
-    override fun onFirstViewAttach() {
-        super.onFirstViewAttach()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 
     fun getAdapter() = Adapter()
 
     interface IClickListener {
-        fun onClick(id: Int)
+        fun onClick(id: Int, v: View)
     }
 
     inner class Adapter : RecyclerView.Adapter<Adapter.Holder>() {
@@ -49,9 +51,10 @@ class StartPresenter : MvpPresenter<StartView>() {
 
         inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val textView: TextView = itemView.findViewById(R.id.textView)
+            private val button: View = itemView.findViewById(R.id.shared_view)
 
             init {
-                textView.setOnClickListener { listener.onClick(layoutPosition) }
+                button.setOnClickListener { listener.onClick(layoutPosition, button) }
             }
         }
     }

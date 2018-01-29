@@ -4,5 +4,9 @@ import com.arellomobile.mvp.MvpView
 
 interface MainView : MvpView {
     fun changeTab(position: Int)
-    fun hideBottomNavigator()
+    fun setTitle(title: String)
+    fun hideBottomNavigatorView()
+    fun showBottomNavigatorView()
+    fun hideBackButton()
+    fun showBackButton()
 }

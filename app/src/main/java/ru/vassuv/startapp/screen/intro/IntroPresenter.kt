@@ -2,12 +2,6 @@ package ru.vassuv.startapp.screen.intro
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import kotlinx.android.synthetic.main.fragment_intro.*
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
-import ru.vassuv.startapp.utils.Router
-import ru.vassuv.startapp.utils.atlibrary.responseJson
 
 @InjectViewState
 class IntroPresenter : MvpPresenter<IntroView>() {

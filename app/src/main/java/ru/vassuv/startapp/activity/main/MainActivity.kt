@@ -64,10 +64,13 @@ class MainActivity : MvpAppCompatActivity(), MainView {
         presenter.onStart()
     }
 
-
     override fun onResume() {
         super.onResume()
         presenter.onResume()
+    }
+
+    override fun setTitle(title: String) {
+        supportActionBar?.title = title
     }
 
     override fun onPause() {
@@ -101,12 +104,20 @@ class MainActivity : MvpAppCompatActivity(), MainView {
         presenter.onSaveInstanceState(outState)
     }
 
-    fun showBottomNavigationView() {
+    override fun showBottomNavigatorView() {
         navigation.visibility = View.VISIBLE
     }
 
-    override fun hideBottomNavigator() {
+    override fun hideBottomNavigatorView() {
         navigation.visibility = View.GONE
+    }
+
+    override fun hideBackButton() {
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
+    }
+
+    override fun showBackButton() {
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     fun setActivateMenuItem(@IdRes menuItemId: Int) {

@@ -1,15 +1,17 @@
-package ru.vassuv.startapp.utils.atlibrary
+package ru.vassuv.startapp.utils.routing
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.commands.*
+import ru.vassuv.startapp.utils.atlibrary.Logger
+import ru.vassuv.startapp.utils.routing.animate.AnimateForward
 
 abstract class Navigator
 protected constructor(private val fragmentManager: FragmentManager,
                       private val containerId: Int,
-                      var onChangeFragment: () -> Unit) : Navigator {
+                      private var onChangeFragment: () -> Unit) : Navigator {
     internal var screenNames: MutableList<String> = ArrayList()
 
     init {
@@ -22,6 +24,17 @@ protected constructor(private val fragmentManager: FragmentManager,
                 fragmentManager
                         .beginTransaction()
                         .replace(containerId, createFragment(command.screenKey, command.transitionData as Bundle))
+                        .addToBackStack(command.screenKey)
+                        .commit()
+                screenNames.add(command.screenKey)
+            }
+            is AnimateForward -> {
+                fragmentManager
+                        .beginTransaction()
+                        .replace(containerId, createFragment(command.screenKey, command.transitionData as Bundle))
+                        .apply {
+                            command.animate.invoke(this)
+                        }
                         .addToBackStack(command.screenKey)
                         .commit()
                 screenNames.add(command.screenKey)
@@ -74,7 +87,7 @@ protected constructor(private val fragmentManager: FragmentManager,
             }
         }
         val lastFragment = screenNames.lastOrNull()
-        if(lastFragment!= null) openFragment(lastFragment)
+        if(lastFragment!= null) openFragment(screenNames.size - 1, lastFragment)
 
         printScreensScheme()
     }
@@ -95,7 +108,7 @@ protected constructor(private val fragmentManager: FragmentManager,
 
     protected abstract fun exit()
 
-    protected abstract fun openFragment(name: String)
+    protected abstract fun openFragment(position: Int, name: String)
 
     private fun backToUnexisting() = backToRoot()
 

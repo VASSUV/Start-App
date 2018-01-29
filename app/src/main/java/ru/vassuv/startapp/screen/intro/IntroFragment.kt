@@ -41,19 +41,6 @@ class IntroFragment : BaseFragment(), IntroView {
 
     override fun onStart() {
         super.onStart()
-        // get the center for the clipping circle
-        val cx = (myView.getLeft() + myView.getRight()) * 15
-        val cy = (myView.getTop() + myView.getBottom()) * 15
-
-// get the final radius for the clipping circle
-        val finalRadius = Math.max(myView.getWidth(), myView.getHeight())
-
-// create the animator for this view (the start radius is zero)
-        val anim = ViewAnimationUtils.createCircularReveal(myView, cx, cy, 90f, finalRadius.toFloat())
-
-// make the view visible and start the animation
-        myView.setVisibility(View.VISIBLE)
-        anim.start()
     }
 
     override fun setText(text: String) {
