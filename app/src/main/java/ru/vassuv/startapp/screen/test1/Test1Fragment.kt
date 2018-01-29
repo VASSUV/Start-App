@@ -4,15 +4,12 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.TargetApi
 import android.graphics.Color
+import android.graphics.drawable.Animatable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.support.transition.TransitionManager.beginDelayedTransition
 import android.support.v4.view.ViewCompat
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewAnimationUtils
-import android.view.ViewGroup
 import com.arellomobile.mvp.presenter.InjectPresenter
 import kotlinx.android.synthetic.main.fragment_test1.*
 import ru.vassuv.startapp.R
@@ -20,13 +17,11 @@ import ru.vassuv.startapp.fabric.FrmFabric
 import ru.vassuv.startapp.utils.atlibrary.BaseFragment
 import ru.vassuv.startapp.utils.routing.Router
 import java.util.*
-import android.support.v4.app.ActivityCompat
-import android.support.v4.app.ActivityOptionsCompat
-import android.content.Intent
 import android.os.Build
-import android.support.annotation.RequiresApi
-import android.support.transition.TransitionManager
-import com.transitionseverywhere.Rotate
+import android.transition.TransitionInflater
+import android.view.*
+import com.transitionseverywhere.*
+import com.transitionseverywhere.extra.Scale
 
 
 class Test1Fragment : BaseFragment(), Test1View {
@@ -44,21 +39,45 @@ class Test1Fragment : BaseFragment(), Test1View {
     @InjectPresenter
     lateinit var presenter: Test1Presenter
 
+    private var transitionName: String = ""
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            transitionName = arguments.getString("SHARED_NAME", "")
+            sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_test1, container, false)
+        val inflate = inflater.inflate(R.layout.fragment_test1, container, false)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            inflate.findViewById<View>(R.id.button3).transitionName = transitionName
+        }
+        return inflate
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         initExample1()
         initExample2()
         initExample3()
+        initExample4()
+    }
+
+    private fun initExample4() {
+        button4Show.setOnClickListener{
+            Router.uiListener.showLoader()
+        }
+        button4Hide.setOnClickListener{
+            Router.uiListener.hideLoader()
+        }
     }
 
     private fun initExample3() {
-        TransitionManager.beginDelayedTransition(container3, TextColorTransition())
+
         button3.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 Router.navigateToWithAnimate(FrmFabric.TEST2.name) {
@@ -72,15 +91,28 @@ class Test1Fragment : BaseFragment(), Test1View {
 
     private fun initExample2() {
         button2Left.setOnClickListener {
-            beginDelayedTransition(container2)
-            button2Right.invertVisibility()
-            val random = Random()
-            button3.setTextColor(Color.argb(random.nextInt(255), random.nextInt(255), random.nextInt(255), random.nextInt(255)))
+            animate2()
         }
         button2Right.setOnClickListener {
-            beginDelayedTransition(container2)
-            button2Left.invertVisibility()
+            animate2()
         }
+    }
+
+    private fun animate2() {
+        TransitionManager.beginDelayedTransition(container2, TransitionSet()
+                .addTransition(Slide())
+                .addTransition(Scale())
+                .addTransition(Recolor()))
+        button2Right.invertVisibility()
+        val random = Random()
+        button2Right.setTextColor(Color.argb(255, random.nextInt(255), random.nextInt(255), random.nextInt(255)))
+
+        TransitionManager.beginDelayedTransition(container2, TransitionSet()
+                .addTransition(Slide())
+                .addTransition(Scale())
+                .addTransition(Recolor()))
+        button2Left.invertVisibility()
+        button2Left.setTextColor(Color.argb(255, random.nextInt(255), random.nextInt(255), random.nextInt(255)))
     }
 
     private fun initExample1() {
@@ -161,5 +193,5 @@ class Test1Fragment : BaseFragment(), Test1View {
 }
 
 fun View.invertVisibility() {
-    visibility = if (visibility == View.VISIBLE) View.GONE else View.VISIBLE
+    visibility = if (visibility == View.VISIBLE) View.INVISIBLE else View.VISIBLE
 }

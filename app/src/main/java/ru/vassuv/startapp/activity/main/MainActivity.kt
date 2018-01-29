@@ -1,26 +1,19 @@
 package ru.vassuv.startapp.activity.main
 
+import android.graphics.Color
+import android.graphics.drawable.Animatable
 import android.os.Bundle
-import android.os.Message
 import android.support.annotation.IdRes
 import android.support.design.widget.Snackbar
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
+import android.widget.TextView
 import com.arellomobile.mvp.MvpAppCompatActivity
-
 import com.arellomobile.mvp.presenter.InjectPresenter
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.vassuv.startapp.R
 import ru.vassuv.startapp.utils.UiListener
-
 import ru.vassuv.startapp.utils.atlibrary.BaseFragment
-import android.widget.TextView
-import android.view.Gravity
-import android.R.attr.gravity
-import android.graphics.Color
-import android.widget.FrameLayout
-
 
 class MainActivity : MvpAppCompatActivity(), MainView {
     @InjectPresenter
@@ -44,10 +37,12 @@ class MainActivity : MvpAppCompatActivity(), MainView {
 
             override fun showLoader() {
                 progress.visibility = View.VISIBLE
+                (progress.background as Animatable?)?.start()
             }
 
             override fun hideLoader() {
                 progress.visibility = View.GONE
+                (progress.background as Animatable?)?.stop()
             }
         }
 

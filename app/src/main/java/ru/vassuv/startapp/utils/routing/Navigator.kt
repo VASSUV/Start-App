@@ -84,7 +84,7 @@ protected constructor(private val fragmentManager: FragmentManager,
     }
 
     override fun applyCommands(commands: Array<out Command>?) {
-        fragmentManager.beginTransaction().applyCommands(commands).commit()
+        fragmentManager.beginTransaction().applyCommands(commands).commitAllowingStateLoss()
         val lastFragment = screenNames.lastOrNull()
         if (lastFragment != null) openFragment(screenNames.size - 1, lastFragment)
         printScreensScheme()

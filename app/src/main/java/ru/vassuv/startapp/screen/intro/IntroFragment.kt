@@ -28,14 +28,6 @@ class IntroFragment : BaseFragment(), IntroView {
         return inflater.inflate(R.layout.fragment_intro, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
-
-    override fun onStart() {
-        super.onStart()
-    }
-
     override fun setText(text: String) {
 //        textView.text = text
     }

@@ -1,7 +1,6 @@
 package ru.vassuv.startapp.screen.start
 
 import android.os.Build
-import android.support.v4.view.ViewCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import kotlinx.android.synthetic.main.fragment_test1.*
+import org.jetbrains.anko.bundleOf
 import ru.vassuv.startapp.R
 import ru.vassuv.startapp.fabric.FrmFabric
 import ru.vassuv.startapp.utils.routing.Router
@@ -17,30 +16,43 @@ import ru.vassuv.startapp.utils.routing.Router
 
 @InjectViewState
 class StartPresenter : MvpPresenter<StartView>() {
+    val adapter = Adapter()
+
     val list = arrayListOf(FrmFabric.TEST1.name,
             FrmFabric.TEST2.name)
 
+    private var transitionNameCounter = 0
+
     val listener: IClickListener = object : IClickListener {
-        override fun onClick(id: Int, v: View) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                Router.navigateToWithAnimate(list[id]) {
-                    addSharedElement(v, ViewCompat.getTransitionName(v))
+        override fun onClick(position: Int, sharedView: View) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                adapter.transitionPosition = position
+                adapter.transitionName = sharedView.context.getString(R.string.shared_transition_button) + transitionNameCounter++
+                sharedView.transitionName =  adapter.transitionName
+
+                Router.navigateToWithAnimate(list[position], bundleOf("SHARED_NAME" to adapter.transitionName)) {
+                    addSharedElement(sharedView, adapter.transitionName)
                 }
             } else {
-                Router.navigateTo(list[id])
+                Router.navigateTo(list[position])
             }
         }
     }
 
-    fun getAdapter() = Adapter()
-
     interface IClickListener {
-        fun onClick(id: Int, v: View)
+        fun onClick(position: Int, sharedView: View)
     }
 
     inner class Adapter : RecyclerView.Adapter<Adapter.Holder>() {
+
+        var transitionPosition: Int = -1
+        var transitionName: String = ""
+
         override fun onBindViewHolder(holder: Holder?, position: Int) {
             holder?.textView?.text = list[position]
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && transitionPosition == position) {
+                holder?.shared?.transitionName = transitionName
+            }
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
@@ -52,11 +64,12 @@ class StartPresenter : MvpPresenter<StartView>() {
         inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val textView: TextView = itemView.findViewById(R.id.textView)
             private val button: View = itemView.findViewById(R.id.shared_view)
-            private val shared: View = itemView.findViewById(R.id.shared_button)
+            val shared: View = itemView.findViewById(R.id.shared_button)
 
             init {
-                button.setOnClickListener { listener.onClick(layoutPosition, shared) }
+                button.setOnClickListener { listener.onClick(layoutPosition, if(layoutPosition == 0) button else shared) }
             }
         }
+
     }
 }
