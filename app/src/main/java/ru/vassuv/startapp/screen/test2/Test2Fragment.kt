@@ -2,17 +2,15 @@ package ru.vassuv.startapp.screen.test2
 
 import android.os.Build
 import android.os.Bundle
-import android.transition.Fade
 import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import ru.vassuv.startapp.R
-import ru.vassuv.startapp.utils.atlibrary.BaseFragment
-
 import com.arellomobile.mvp.presenter.InjectPresenter
 import kotlinx.android.synthetic.main.fragment_test2.*
+import ru.vassuv.startapp.R
 import ru.vassuv.startapp.fabric.FrmFabric
+import ru.vassuv.startapp.utils.atlibrary.BaseFragment
 
 
 class Test2Fragment : BaseFragment(), Test2View {

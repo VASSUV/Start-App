@@ -19,7 +19,8 @@ class StartPresenter : MvpPresenter<StartView>() {
     val adapter = Adapter()
 
     val list = arrayListOf(FrmFabric.TEST1.name,
-            FrmFabric.TEST2.name)
+            FrmFabric.TEST2.name,
+            FrmFabric.TEST3.name)
 
     private var transitionNameCounter = 0
 

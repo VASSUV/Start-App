@@ -20,8 +20,12 @@ import java.util.*
 import android.os.Build
 import android.transition.TransitionInflater
 import android.view.*
+import android.widget.CheckedTextView
+import android.widget.CompoundButton
+import android.widget.RadioButton
 import com.transitionseverywhere.*
 import com.transitionseverywhere.extra.Scale
+import org.jetbrains.anko.bundleOf
 
 
 class Test1Fragment : BaseFragment(), Test1View {
@@ -56,6 +60,7 @@ class Test1Fragment : BaseFragment(), Test1View {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             inflate.findViewById<View>(R.id.button3).transitionName = transitionName
         }
+
         return inflate
     }
 
@@ -80,7 +85,7 @@ class Test1Fragment : BaseFragment(), Test1View {
 
         button3.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                Router.navigateToWithAnimate(FrmFabric.TEST2.name) {
+                Router.navigateToWithAnimate(FrmFabric.TEST2.name, bundleOf("SHARED_NAME" to button3.transitionName)) {
                     addSharedElement(button3, ViewCompat.getTransitionName(button3))
                 }
             } else {
