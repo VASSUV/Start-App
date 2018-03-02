@@ -5,3 +5,4 @@ interface UiListener {
     fun showLoader()
     fun hideLoader()
 }
+

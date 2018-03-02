@@ -17,6 +17,9 @@ import java.util.*
 import android.os.Build
 import android.transition.TransitionInflater
 import android.view.*
+import android.widget.CheckedTextView
+import android.widget.CompoundButton
+import android.widget.RadioButton
 import com.transitionseverywhere.*
 import com.transitionseverywhere.extra.Scale
 import org.jetbrains.anko.bundleOf
@@ -44,6 +47,7 @@ class Test1Fragment : BaseFragment(), Test1View {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             inflate.findViewById<View>(R.id.button3).transitionName = transitionName
         }
+
         return inflate
     }
 
@@ -69,7 +73,7 @@ class Test1Fragment : BaseFragment(), Test1View {
         button3.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 val name = ViewCompat.getTransitionName(button3)
-                Router.navigateToWithAnimate(FrmFabric.SPLASH.name, bundleOf("SHARED_NAME" to name )) {
+                Router.navigateToWithAnimate(FrmFabric.SPLASH.name, bundleOf("SHARED_NAME" to name)) {
                     addSharedElement(button3, name)
                 }
             } else {

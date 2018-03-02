@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:drawable="@drawable/spinner"
+    tools:ignore="NewApi">
+    <target android:name="lamp1">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:name="color"
+                android:duration="2000"
+                android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+                android:propertyName="fillColor"
+                android:repeatCount="infinite"
+                android:repeatMode="reverse"
+                android:valueFrom="#2fec00"
+                android:valueTo="#ff8a2a"
+                android:valueType="colorType" />
+        </aapt:attr>
+    </target>
+    <target android:name="lamp3">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:name="color"
+                android:duration="2000"
+                android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+                android:propertyName="fillColor"
+                android:repeatCount="infinite"
+                android:repeatMode="reverse"
+                android:valueFrom="#ec1c00"
+                android:valueTo="#2affed"
+                android:valueType="colorType" />
+        </aapt:attr>
+    </target>
+    <target android:name="lamp2">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:name="color"
+                android:duration="2000"
+                android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+                android:propertyName="fillColor"
+                android:repeatCount="infinite"
+                android:repeatMode="reverse"
+                android:valueFrom="#1f1bff"
+                android:valueTo="#eaff00"
+                android:valueType="colorType" />
+        </aapt:attr>
+    </target>
+</animated-vector>

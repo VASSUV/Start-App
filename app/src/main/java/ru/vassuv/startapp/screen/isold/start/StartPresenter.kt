@@ -17,7 +17,6 @@ import ru.vassuv.startapp.utils.routing.Router
 @InjectViewState
 class StartPresenter : MvpPresenter<StartView>() {
     val adapter = Adapter()
-
     val list = arrayListOf(FrmFabric.SPLASH.name)
 
     private var transitionNameCounter = 0
