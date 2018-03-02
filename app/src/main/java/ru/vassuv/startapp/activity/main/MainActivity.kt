@@ -25,8 +25,8 @@ class MainActivity : MvpAppCompatActivity(), MainView {
 
             init {
                 val view = snackBar.view
-                view.setBackgroundColor(Color.RED)
                 val mainTextView: TextView = view.findViewById(android.support.design.R.id.snackbar_text)
+                view.setBackgroundColor(Color.RED)
                 mainTextView.setTextColor(Color.WHITE)
             }
 
@@ -105,6 +105,14 @@ class MainActivity : MvpAppCompatActivity(), MainView {
 
     override fun hideBottomNavigatorView() {
         navigation.visibility = View.GONE
+    }
+
+    override fun hideActionBar() {
+        supportActionBar?.hide()
+    }
+
+    override fun showActionBar() {
+        supportActionBar?.show()
     }
 
     override fun hideBackButton() {

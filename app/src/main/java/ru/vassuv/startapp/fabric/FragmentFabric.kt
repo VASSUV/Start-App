@@ -1,20 +1,32 @@
 package ru.vassuv.startapp.fabric
 
 import android.os.Bundle
-import com.arellomobile.mvp.MvpAppCompatFragment
-import ru.vassuv.startapp.screen.splash.SplashFragment
 import ru.vassuv.startapp.screen.intro.IntroFragment
-import ru.vassuv.startapp.screen.start.StartFragment
-import ru.vassuv.startapp.screen.test1.Test1Fragment
-import ru.vassuv.startapp.screen.test2.Test2Fragment
+import ru.vassuv.startapp.screen.login.LoginFragment
+import ru.vassuv.startapp.screen.splash.SplashFragment
+import ru.vassuv.startapp.utils.atlibrary.BaseFragment
+import kotlin.reflect.KClass
 
-enum class FrmFabric(private val createFragmentLambda: (Bundle) -> MvpAppCompatFragment) {
-    SPLASH({ SplashFragment.newInstance(it) }),
-    INTRO({ IntroFragment.newInstance(it) }),
-    START({ StartFragment.newInstance(it) }),
-    EMPTY({ StartFragment.newInstance(it) }),
-    TEST1({ Test1Fragment.newInstance(it) }),
-    TEST2({ Test2Fragment.newInstance(it) });
+enum class FrmFabric(private val kClass: KClass<out BaseFragment>) {
+    SPLASH(SplashFragment::class),
+    INTRO(IntroFragment::class),
+    LOGIN(LoginFragment::class),
 
-    fun create(data: Bundle) = createFragmentLambda(data)
+    EMPTY(SplashFragment::class);
+
+    fun create(data: Bundle): BaseFragment {
+        val fragment = kClass.java.constructors[0].newInstance() as BaseFragment
+        fragment.arguments = data
+        return fragment
+    }
+
+    companion object {
+        @JvmStatic
+        fun valueOf(kClass: KClass<out BaseFragment>): FrmFabric {
+            values().forEach {
+                if(it.kClass == kClass) return it
+            }
+            return EMPTY
+        }
+    }
 }

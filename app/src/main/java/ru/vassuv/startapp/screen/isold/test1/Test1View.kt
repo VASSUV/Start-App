@@ -1,4 +1,4 @@
-package ru.vassuv.startapp.screen.test1
+package ru.vassuv.startapp.screen.isold.test1
 
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.SingleStateStrategy

@@ -1,6 +1,5 @@
 package ru.vassuv.startapp.utils.routing
 
-import android.annotation.TargetApi
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
@@ -20,13 +19,11 @@ object Router: BaseRouter() {
     fun navigateTo(screenKey: String, data: Any? = Bundle()) = executeCommands(Forward(screenKey, data))
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    @TargetApi(Build.VERSION_CODES.KITKAT)
     fun navigateToWithAnimate(screenKey: String,  animate: FragmentTransaction.() -> Unit) {
         executeCommands(AnimateForward(screenKey, Bundle(), animate))
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    @TargetApi(Build.VERSION_CODES.KITKAT)
     fun navigateToWithAnimate(screenKey: String, data: Any?, animate: FragmentTransaction.() -> Unit) {
         executeCommands(AnimateForward(screenKey, data, animate))
     }

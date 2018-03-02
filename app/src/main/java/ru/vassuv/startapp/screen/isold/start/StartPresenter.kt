@@ -1,4 +1,4 @@
-package ru.vassuv.startapp.screen.start
+package ru.vassuv.startapp.screen.isold.start
 
 import android.os.Build
 import android.support.v7.widget.RecyclerView
@@ -18,8 +18,7 @@ import ru.vassuv.startapp.utils.routing.Router
 class StartPresenter : MvpPresenter<StartView>() {
     val adapter = Adapter()
 
-    val list = arrayListOf(FrmFabric.TEST1.name,
-            FrmFabric.TEST2.name)
+    val list = arrayListOf(FrmFabric.SPLASH.name)
 
     private var transitionNameCounter = 0
 

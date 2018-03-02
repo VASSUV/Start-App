@@ -1,4 +1,4 @@
-package ru.vassuv.startapp.screen.test1
+package ru.vassuv.startapp.screen.isold.test1
 
 import android.animation.ValueAnimator
 import android.widget.TextView

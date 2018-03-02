@@ -1,14 +1,11 @@
-package ru.vassuv.startapp.screen.test1
+package ru.vassuv.startapp.screen.isold.test1
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.annotation.TargetApi
 import android.graphics.Color
-import android.graphics.drawable.Animatable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.support.transition.TransitionManager.beginDelayedTransition
 import android.support.v4.view.ViewCompat
 import com.arellomobile.mvp.presenter.InjectPresenter
 import kotlinx.android.synthetic.main.fragment_test1.*
@@ -22,19 +19,10 @@ import android.transition.TransitionInflater
 import android.view.*
 import com.transitionseverywhere.*
 import com.transitionseverywhere.extra.Scale
+import org.jetbrains.anko.bundleOf
 
 
 class Test1Fragment : BaseFragment(), Test1View {
-    override val type: FrmFabric
-        get() = FrmFabric.TEST1
-
-    companion object {
-        fun newInstance(args: Bundle): Test1Fragment {
-            val fragment = Test1Fragment()
-            fragment.arguments = args
-            return fragment
-        }
-    }
 
     @InjectPresenter
     lateinit var presenter: Test1Presenter
@@ -45,7 +33,7 @@ class Test1Fragment : BaseFragment(), Test1View {
         super.onCreate(savedInstanceState)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            transitionName = arguments.getString("SHARED_NAME", "")
+            transitionName = arguments?.getString("SHARED_NAME", "") ?: return
             sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
         }
     }
@@ -59,7 +47,7 @@ class Test1Fragment : BaseFragment(), Test1View {
         return inflate
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initExample1()
         initExample2()
@@ -80,11 +68,12 @@ class Test1Fragment : BaseFragment(), Test1View {
 
         button3.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                Router.navigateToWithAnimate(FrmFabric.TEST2.name) {
-                    addSharedElement(button3, ViewCompat.getTransitionName(button3))
+                val name = ViewCompat.getTransitionName(button3)
+                Router.navigateToWithAnimate(FrmFabric.SPLASH.name, bundleOf("SHARED_NAME" to name )) {
+                    addSharedElement(button3, name)
                 }
             } else {
-                Router.navigateTo(FrmFabric.TEST2.name)
+                Router.navigateTo(FrmFabric.SPLASH.name)
             }
         }
     }

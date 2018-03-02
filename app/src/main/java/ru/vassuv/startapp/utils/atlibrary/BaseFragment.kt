@@ -18,15 +18,13 @@ abstract class BaseFragment: MvpAppCompatFragment() {
         Router.exit()
     }
 
-    abstract val type: FrmFabric
-
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        App.log("♠♠♠♠♠♠ $CLASS_NAME: onViewCreated()")
+        App.log("♠♠♠ $CLASS_NAME ♠♠♠:  onViewCreated()")
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        App.log("♠♠♠♠♠♠ $CLASS_NAME: onDestroyView()")
+        App.log("♠♠♠ $CLASS_NAME ♠♠♠: onDestroyView()")
     }
 }

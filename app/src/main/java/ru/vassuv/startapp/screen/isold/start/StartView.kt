@@ -1,4 +1,4 @@
-package ru.vassuv.startapp.screen.start
+package ru.vassuv.startapp.screen.isold.start
 
 import android.transition.Transition
 import com.arellomobile.mvp.MvpView

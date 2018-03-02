@@ -1,36 +1,23 @@
-package ru.vassuv.startapp.screen.start
+package ru.vassuv.startapp.screen.isold.start
 
 import android.os.Bundle
-import android.support.transition.Fade
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.arellomobile.mvp.presenter.InjectPresenter
 import kotlinx.android.synthetic.main.fragment_start.*
 import ru.vassuv.startapp.R
-import ru.vassuv.startapp.fabric.FrmFabric
 import ru.vassuv.startapp.utils.atlibrary.BaseFragment
 import android.support.v7.widget.LinearLayoutManager
 import android.transition.Transition
 import com.arellomobile.mvp.presenter.PresenterType
-
-
+import java.util.TreeSet
 
 class StartFragment : BaseFragment(), StartView {
-    override val type = FrmFabric.START
 
     @InjectPresenter(type = PresenterType.GLOBAL, tag = "globalStart")
     lateinit var presenter: StartPresenter
 
-    companion object {
-
-        fun newInstance(args: Bundle): StartFragment {
-            val fragment = StartFragment()
-            fragment.arguments = args
-            return fragment
-        }
-
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -42,13 +29,19 @@ class StartFragment : BaseFragment(), StartView {
         adapter.transitionName = name
         adapter.transitionPosition = pos
         adapter.notifyItemChanged(pos)
+
+
+        val set = TreeSet<Number>()
+        set.add(10L)
+        set.add(10)
+        set.add(10.0)
+
+        activity?.title = set.size.toString()
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = presenter.adapter
-
     }
 
     override fun setText(text: String) {

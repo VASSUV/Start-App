@@ -10,88 +10,24 @@ import ru.vassuv.startapp.utils.atlibrary.json.JsonObject
 import java.net.UnknownHostException
 import kotlin.coroutines.experimental.suspendCoroutine
 
-
-data class Response<T>(val result: T?,
-                       val error: Error = ERROR_EMPTY)
-
-open class Error(open val status: Int = 0,
-        override val message: String? = null) : Exception()
-
-data class RequestError(override val status: Int = 0,
-                        override val message: String? = null) : Error(status, message)
-
-data class ResponseError(override val status: Int,
-                         override val message: String? = null,
-                         val errorBody: String? = null) : Error(status, message)
-
-val ERROR_EMPTY = RequestError()
-val ERROR_INTERNET_NOT_FOUND = RequestError(800, "Отсутсвует интернет соединение")
-val ERROR_TIMEOUT = RequestError(900, "Превышено время ожидания")
-val ERROR = RequestError(1000, "Произошла ошибка")
-
-suspend fun CoroutineScope.responseJson(host: String,
-                                        params: Map<String, String> = hashMapOf(),
-                                        isCheckError: Boolean
-): Response<JsonObject> = response(host, params, { response ->
-    JsonObject.readFrom(response).apply {
-        if(isCheckError) {
-            val status = this.int("status") ?: 0
-            if(status > 0) throw ResponseError(status, this.string("message"), this["meta"].toString())
-        }
-    }
-})
-
-suspend fun response(host: String,
-                                    params: Map<String, String> = hashMapOf()
-): Response<String> = response(host, params, { it })
-
-suspend fun <T> response(host: String,
-                                        params: Map<String, String> = hashMapOf(),
-                                        postDelay: suspend (String) -> T?
-): Response<T> {
-    var result: Response<T>? = null
-    val job = launch(CommonPool) {
-        result = try {
-            Response(runRequest(host, params, postDelay))
-        } catch (throwable: Throwable) {
-            Response(null, throwable.toError())
-        }
-    }
-
-//    delay(1000)
-    job.join()
-    return result ?: Response<T>(null, ERROR_EMPTY)
-}
-
-private fun Throwable.toError() = when (this) {
-    is UnknownHostException -> ERROR_INTERNET_NOT_FOUND
-    is ResponseError -> this
-    is Error -> this
-    else -> ERROR
-}
-
-private suspend fun <T> runRequest(host: String,
-                           params: Map<String, String>,
-                           postDelay: suspend (String) -> T?
-): T? = postDelay(RETROFIT.get(host, params).await())
-
-private suspend fun Call<String>.await(): String = withTimeoutOrNull(10000) {
+suspend fun Call<String>.await(): String = withTimeoutOrNull(10000) {
     suspendCoroutine<String> { continuation ->
         enqueue(object : Callback<String> {
             override fun onFailure(call: Call<String>?, t: Throwable?) {
-                t?.let { continuation.resumeWithException(it) } ?: continuation.resumeWithException(ERROR_EMPTY)
+                t?.let { continuation.resumeWithException(it) }
+                        ?: continuation.resumeWithException(ERROR_EMPTY)
             }
 
             override fun onResponse(call: Call<String>?, response: retrofit2.Response<String>?) {
                 response?.body()?.let { continuation.resume(it) }
-                        ?: response?.let { continuation.resumeWithException(ResponseError(it.code(), it.message(), it.errorBody().toString())) }
+                        ?: response?.let { continuation.resumeWithException(Error(it.code(), it.message(), it.errorBody().toString())) }
                         ?: continuation.resumeWithException(ERROR_EMPTY)
             }
         })
     }
 } ?: throw ERROR_TIMEOUT
 
-private val RETROFIT: IRequest by lazy({
+val RETROFIT: IRequest by lazy({
     retrofit2.Retrofit.Builder()
             .baseUrl(IRequest.Urls.BASE)
             .client(OkHttpClient
@@ -99,12 +35,12 @@ private val RETROFIT: IRequest by lazy({
                     .followRedirects(true)
                     .addNetworkInterceptor {
                         val request = it.request().newBuilder().build()
-//                        Logger.trace("===> SERVER", "url =", request.url())
-//                        Logger.trace("===> SERVER", "method =", request.method())
-//                        Logger.trace("===> SERVER", "headers =", request.headers()
-//                                .toMultimap()
-//                                .map { "\n            ${it.key}:${it.value.toList().first()}" }
-//                                .joinToString(prefix = "", postfix = ""))
+                        Logger.trace("===> SERVER", "url =", request.url())
+                        Logger.trace("===> SERVER", "method =", request.method())
+                        Logger.trace("===> SERVER", "headers =", request.headers()
+                                .toMultimap()
+                                .map { "\n            ${it.key}:${it.value.toList().first()}" }
+                                .joinToString(prefix = "", postfix = ""))
                         val response = it.proceed(request)
                         Logger.trace("<<<< SERVER", response)
                         response
@@ -114,9 +50,9 @@ private val RETROFIT: IRequest by lazy({
             .create(IRequest::class.java)
 })
 
-private interface IRequest {
+interface IRequest {
     object Urls {
-        val BASE = "https://google.com"
+        var BASE = "https://google.com"
     }
 
     @GET

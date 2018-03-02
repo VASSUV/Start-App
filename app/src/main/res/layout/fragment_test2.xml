@@ -12,7 +12,7 @@
         android:orientation="horizontal"
         android:layout_gravity="center"
         android:gravity="center"
-        tools:context="ru.vassuv.startapp.screen.test2.Test2Fragment">
+        tools:context=".screen.isold.test2.Test2Fragment">
 
         <Button
             android:id="@+id/button"

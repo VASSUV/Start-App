@@ -4,16 +4,19 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
     defaultConfig {
         applicationId "ru.vassuv.startapp"
         minSdkVersion 15
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        vectorDrawables.useSupportLibrary= true
+        vectorDrawables.useSupportLibrary = true
+
+        javaCompileOptions.annotationProcessorOptions.includeCompileClasspath true
     }
     buildTypes {
         release {
@@ -23,8 +26,20 @@ android {
     }
 }
 
+kapt {
+    generateStubs = true
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir "${buildDir.absolutePath}/tmp/kapt/main/kotlinGenerated/"
+        }
+    }
+}
+
 ext {
-    supportVersion = "26.1.0"
+    supportVersion = "27.0.2"
     moxyVersion = "1.5.3"
     retrofit2Version = "2.3.0"
 }

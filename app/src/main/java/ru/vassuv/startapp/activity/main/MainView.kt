@@ -9,4 +9,6 @@ interface MainView : MvpView {
     fun showBottomNavigatorView()
     fun hideBackButton()
     fun showBackButton()
+    fun hideActionBar()
+    fun showActionBar()
 }
