@@ -5,26 +5,22 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
-import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.commands.*
 import ru.vassuv.startapp.utils.routing.animate.AnimateForward
 import java.util.*
 import java.util.logging.Level
 import java.util.logging.Logger
+
 abstract class Navigator
-protected constructor(private val fragmentManager: FragmentManager,
-                      private val containerId: Int,
-                      private var onChangeFragment: () -> Unit) : Navigator {
+protected constructor(val fragmentManager: FragmentManager,
+                      val containerId: Int,
+                      var onChangeFragment: () -> Unit) : ru.terrakok.cicerone.Navigator {
 
     var screenNames: MutableList<String> = ArrayList()
-    internal set(value) {
-        field = value
-        printScreensScheme()
-    }
-
-    fun setScreenNames(value: MutableList<*>) {
-        screenNames = value.map { it.toString() }.toMutableList()
-    }
+        internal set(value) {
+            field = value
+            printScreensScheme()
+        }
 
     private val logger = Logger.getLogger("Navigator")
 
@@ -32,7 +28,11 @@ protected constructor(private val fragmentManager: FragmentManager,
         fragmentManager.addOnBackStackChangedListener { onChangeFragment() }
     }
 
-    private fun FragmentTransaction.applyCommands(commands: Array<out Command>?): FragmentTransaction {
+    fun setScreenNames(value: MutableList<*>) {
+        screenNames = value.map { it.toString() }.toMutableList()
+    }
+
+    fun FragmentTransaction.applyCommands(commands: Array<out Command>?): FragmentTransaction {
         commands?.forEach { command ->
             when (command) {
                 is Forward -> {
@@ -96,7 +96,7 @@ protected constructor(private val fragmentManager: FragmentManager,
         return this
     }
 
-    override fun applyCommands(commands: Array<out Command>?) {
+    override fun applyCommands(commands: Array<out Command>) {
         fragmentManager.beginTransaction().applyCommands(commands).commitAllowingStateLoss()
         val lastFragment = screenNames.lastOrNull()
         if (lastFragment != null) openFragment(screenNames.size - 1, lastFragment)

@@ -9,7 +9,9 @@ import ru.vassuv.startapp.screen.BaseFragment
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import kotlinx.android.synthetic.main.fragment_splash.*
+import ru.vassuv.processor.annotation.Route
 
+@Route
 class SplashFragment : BaseFragment(), SplashView {
     @InjectPresenter
     lateinit var presenter: SplashPresenter

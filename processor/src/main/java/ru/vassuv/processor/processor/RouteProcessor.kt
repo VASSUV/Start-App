@@ -1,36 +1,45 @@
 package ru.vassuv.processor.processor
 
 import com.google.auto.service.AutoService
-import com.squareup.kotlinpoet.FileSpec
-import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.kotlinpoet.*
 import ru.vassuv.processor.annotation.Route
 import java.io.File
-import javax.annotation.processing.AbstractProcessor
-import javax.annotation.processing.Processor
-import javax.annotation.processing.RoundEnvironment
+import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.Element
 import javax.lang.model.element.TypeElement
+import javax.lang.model.util.Elements
+import javax.lang.model.util.Types
 
 @AutoService(Processor::class)
 class RouteProcessor : AbstractProcessor() {
 
     val FILE_NAME = "FrmFabric"
-    val PACKAGE = "ru.vassuv.routing"
+    val PACKAGE = "ru.vassuv.processor"
 
     override fun getSupportedAnnotationTypes(): MutableSet<String> {
-        return mutableSetOf(Route::class.java.name)
+        return linkedSetOf(Route::class.java.canonicalName)
     }
 
     override fun getSupportedSourceVersion(): SourceVersion {
-        return SourceVersion.latest()
+        return SourceVersion.latestSupported()
     }
 
+    private var typeUtils: Types? = null
+    private var elementUtils: Elements? = null
+
+    override fun init(processingEnvironment: ProcessingEnvironment?) {
+        super.init(processingEnvironment)
+
+        processingEnvironment ?: return
+
+        typeUtils = processingEnvironment.typeUtils
+        elementUtils = processingEnvironment.elementUtils
+    }
 
     override fun process(annotations: MutableSet<out TypeElement>, roundEnv: RoundEnvironment): Boolean {
 
-        val annotatedElements = roundEnv.getElementsAnnotatedWith(Route::class.java)
+        val annotatedElements = roundEnv.getElementsAnnotatedWith(annotations.find { it.simpleName.toString() == "Route" } ?: return false) ?: return false
 
         val file = FileSpec.builder(PACKAGE, FILE_NAME)
                 .addType(generateClass(annotatedElements))
@@ -45,18 +54,28 @@ class RouteProcessor : AbstractProcessor() {
     private fun generateClass(annotatedElements: MutableSet<out Element>): TypeSpec {
         val frmFabricClass = TypeSpec.objectBuilder(FILE_NAME)
 
+        val bundleTypeName = elementUtils?.getTypeElement("android.os.Bundle")?.asType()?.asTypeName()?.asNullable()
+
+        var fragmentTypeName: TypeName
+
+        if (bundleTypeName != null)
+
         annotatedElements
                 .forEach {
-                    val getterName = "get" + it.simpleName.toString()
+                    val getterName = "create" + it.simpleName.toString()
+
+                    fragmentTypeName = it.asType().asTypeName()
+
                     frmFabricClass.addFunction(FunSpec.builder(getterName)
-                            .addStatement("return \"World\"")
+                            .addAnnotation(JvmStatic::class)
+                            .addParameter("args", bundleTypeName)
+                            .returns(fragmentTypeName)
+                            .addStatement("val fragment = ${it.simpleName}()")
+                            .addStatement("fragment.args = args")
+                            .addStatement("return fragment")
                             .build())
                 }
 
-        val getterName = "getInstance"
-        frmFabricClass.addFunction(FunSpec.builder(getterName)
-                .addStatement("return \"World\"")
-                .build())
         return frmFabricClass.build()
     }
 

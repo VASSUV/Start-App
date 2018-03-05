@@ -9,7 +9,10 @@ import ru.vassuv.startapp.screen.BaseFragment
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import kotlinx.android.synthetic.main.fragment_intro.*
+import ru.vassuv.processor.annotation.Route
+import ru.vassuv.processor
 
+@Route
 class IntroFragment : BaseFragment(), IntroView {
     @InjectPresenter
     lateinit var presenter: IntroPresenter
@@ -25,6 +28,8 @@ class IntroFragment : BaseFragment(), IntroView {
         loginButton.setOnClickListener { presenter.loginClick() }
         myProjectButton.setOnClickListener { presenter.myProjectClick() }
         demoButton.setOnClickListener { presenter.demoClick() }
+
+        FrmFabric
     }
 
 }

@@ -32,8 +32,8 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation 'com.android.support:appcompat-v7:27.1.0'
-    implementation 'ru.terrakok.cicerone:cicerone:3.0.0'
-    implementation "com.android.support:transition:27.1.0"
+    compile 'ru.terrakok.cicerone:cicerone:3.0.0'
+    compile "com.android.support:transition:27.1.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 repositories {
