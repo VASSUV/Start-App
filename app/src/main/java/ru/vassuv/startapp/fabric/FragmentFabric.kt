@@ -4,7 +4,7 @@ import android.os.Bundle
 import ru.vassuv.startapp.screen.intro.IntroFragment
 import ru.vassuv.startapp.screen.login.LoginFragment
 import ru.vassuv.startapp.screen.splash.SplashFragment
-import ru.vassuv.startapp.utils.atlibrary.BaseFragment
+import ru.vassuv.startapp.screen.BaseFragment
 import kotlin.reflect.KClass
 
 enum class FrmFabric(private val kClass: KClass<out BaseFragment>) {

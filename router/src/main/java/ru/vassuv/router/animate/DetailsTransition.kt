@@ -1,4 +1,4 @@
-package ru.vassuv.startapp.utils.routing.animate
+package ru.vassuv.router.animate
 
 import android.support.transition.ChangeBounds
 import android.support.transition.ChangeTransform

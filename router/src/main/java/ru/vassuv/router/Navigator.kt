@@ -1,19 +1,32 @@
-package ru.vassuv.startapp.utils.routing
+package ru.vassuv.router
 
 import android.os.Bundle
+
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.commands.*
-import ru.vassuv.startapp.utils.atlibrary.Logger
 import ru.vassuv.startapp.utils.routing.animate.AnimateForward
-
+import java.util.*
+import java.util.logging.Level
+import java.util.logging.Logger
 abstract class Navigator
 protected constructor(private val fragmentManager: FragmentManager,
                       private val containerId: Int,
                       private var onChangeFragment: () -> Unit) : Navigator {
-    internal var screenNames: MutableList<String> = ArrayList()
+
+    var screenNames: MutableList<String> = ArrayList()
+    internal set(value) {
+        field = value
+        printScreensScheme()
+    }
+
+    fun setScreenNames(value: MutableList<*>) {
+        screenNames = value.map { it.toString() }.toMutableList()
+    }
+
+    private val logger = Logger.getLogger("Navigator")
 
     init {
         fragmentManager.addOnBackStackChangedListener { onChangeFragment() }
@@ -90,12 +103,7 @@ protected constructor(private val fragmentManager: FragmentManager,
         printScreensScheme()
     }
 
-    private fun printScreensScheme() = Logger.trace("Screen chain:", screenNames.joinToString(" ➔ ", "[", "]"))
-
-    fun setScreenNames(value: MutableList<*>) {
-        screenNames = value.map { it.toString() } as MutableList<String>
-        printScreensScheme()
-    }
+    private fun printScreensScheme() = logger.log(Level.ALL, "Screen chain:", screenNames.joinToString(" ➔ ", "[", "]"))
 
     private fun backToRoot() {
         (0 until fragmentManager.backStackEntryCount).forEach { fragmentManager.popBackStack() }

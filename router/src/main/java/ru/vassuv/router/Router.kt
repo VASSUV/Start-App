@@ -1,18 +1,28 @@
-package ru.vassuv.startapp.utils.routing
+package ru.vassuv.router
 
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
 import android.support.v4.app.FragmentTransaction
 import ru.terrakok.cicerone.BaseRouter
+import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.commands.*
-import ru.vassuv.startapp.utils.UiListener
 import ru.vassuv.startapp.utils.routing.animate.AnimateForward
 
+fun setNavigator(navigator: Navigator?) {
+    Router.cicerone.navigatorHolder.setNavigator(navigator)
+}
+
+fun removeNavigator() {
+    Router.cicerone.navigatorHolder.removeNavigator()
+}
+
 object Router: BaseRouter() {
+
+    internal var cicerone: Cicerone<Router> = Cicerone.create(Router)
+
     lateinit var onNewRootScreenListener: ((screenKey: String) -> Unit)
     lateinit var onBackScreenListener: () -> Unit
-    lateinit var uiListener: UiListener
 
     fun backTo(screenKey: String) = executeCommands(BackTo(screenKey))
 

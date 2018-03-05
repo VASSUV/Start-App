@@ -1,13 +1,10 @@
-package ru.vassuv.startapp.utils.atlibrary
+package ru.vassuv.startapp.screen
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.arellomobile.mvp.MvpAppCompatFragment
+import ru.vassuv.router.Router
 import ru.vassuv.startapp.App
-import ru.vassuv.startapp.fabric.FrmFabric
-import ru.vassuv.startapp.utils.routing.Router
 
 
 abstract class BaseFragment: MvpAppCompatFragment() {

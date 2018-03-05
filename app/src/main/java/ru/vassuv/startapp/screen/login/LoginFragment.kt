@@ -5,12 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import ru.vassuv.startapp.R
-import ru.vassuv.startapp.screen.login.LoginView
-import ru.vassuv.startapp.screen.login.LoginPresenter
-import ru.vassuv.startapp.utils.atlibrary.BaseFragment
+import ru.vassuv.startapp.screen.BaseFragment
 
 import com.arellomobile.mvp.presenter.InjectPresenter
+import ru.vassuv.processor.annotation.Route
 
+@Route
 class LoginFragment : BaseFragment(), LoginView {
     @InjectPresenter
     lateinit var presenter: LoginPresenter

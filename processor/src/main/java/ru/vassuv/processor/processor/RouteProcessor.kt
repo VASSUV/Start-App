@@ -1,22 +1,32 @@
-package ru.vassuv.generator
+package ru.vassuv.processor.processor
 
 import com.google.auto.service.AutoService
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.TypeSpec
+import ru.vassuv.processor.annotation.Route
 import java.io.File
-import javax.annotation.processing.*
+import javax.annotation.processing.AbstractProcessor
+import javax.annotation.processing.Processor
+import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.Element
 import javax.lang.model.element.TypeElement
 
-@SupportedAnnotationTypes(
-        "ru.vassuv.generator.Route")
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
 @AutoService(Processor::class)
-class Generator : AbstractProcessor() {
+class RouteProcessor : AbstractProcessor() {
+
     val FILE_NAME = "FrmFabric"
     val PACKAGE = "ru.vassuv.routing"
+
+    override fun getSupportedAnnotationTypes(): MutableSet<String> {
+        return mutableSetOf(Route::class.java.name)
+    }
+
+    override fun getSupportedSourceVersion(): SourceVersion {
+        return SourceVersion.latest()
+    }
+
 
     override fun process(annotations: MutableSet<out TypeElement>, roundEnv: RoundEnvironment): Boolean {
 

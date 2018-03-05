@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import com.arellomobile.mvp.presenter.InjectPresenter
 import kotlinx.android.synthetic.main.fragment_test2.*
 import ru.vassuv.startapp.R
-import ru.vassuv.startapp.utils.atlibrary.BaseFragment
+import ru.vassuv.startapp.screen.BaseFragment
 
 class Test2Fragment : BaseFragment(), Test2View {
 

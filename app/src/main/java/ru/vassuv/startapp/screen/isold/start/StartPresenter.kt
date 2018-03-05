@@ -9,10 +9,9 @@ import android.widget.TextView
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import org.jetbrains.anko.bundleOf
+import ru.vassuv.router.Router
 import ru.vassuv.startapp.R
 import ru.vassuv.startapp.fabric.FrmFabric
-import ru.vassuv.startapp.utils.routing.Router
-
 
 @InjectViewState
 class StartPresenter : MvpPresenter<StartView>() {
@@ -46,10 +45,10 @@ class StartPresenter : MvpPresenter<StartView>() {
         var transitionPosition: Int = -1
         var transitionName: String = ""
 
-        override fun onBindViewHolder(holder: Holder?, position: Int) {
-            holder?.textView?.text = list[position]
+        override fun onBindViewHolder(holder: Holder, position: Int) {
+            holder.textView.text = list[position]
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && transitionPosition == position) {
-                holder?.shared?.transitionName = transitionName
+                holder.shared.transitionName = transitionName
             }
         }
 

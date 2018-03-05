@@ -13,7 +13,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.vassuv.startapp.R
 import ru.vassuv.startapp.utils.UiListener
-import ru.vassuv.startapp.utils.atlibrary.BaseFragment
+import ru.vassuv.startapp.screen.BaseFragment
 
 class MainActivity : MvpAppCompatActivity(), MainView {
     @InjectPresenter

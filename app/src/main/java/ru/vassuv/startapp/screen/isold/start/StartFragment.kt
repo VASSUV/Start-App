@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import com.arellomobile.mvp.presenter.InjectPresenter
 import kotlinx.android.synthetic.main.fragment_start.*
 import ru.vassuv.startapp.R
-import ru.vassuv.startapp.utils.atlibrary.BaseFragment
+import ru.vassuv.startapp.screen.BaseFragment
 import android.support.v7.widget.LinearLayoutManager
 import android.transition.Transition
 import com.arellomobile.mvp.presenter.PresenterType

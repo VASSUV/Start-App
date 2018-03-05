@@ -6,9 +6,8 @@ import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
+import ru.vassuv.router.Router
 import ru.vassuv.startapp.fabric.FrmFabric
-import ru.vassuv.startapp.screen.splash.SplashView
-import ru.vassuv.startapp.utils.routing.Router
 
 @InjectViewState
 class SplashPresenter : MvpPresenter<SplashView>() {

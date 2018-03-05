@@ -5,13 +5,14 @@ import android.support.design.widget.BottomNavigationView.OnNavigationItemSelect
 import android.support.v4.app.FragmentManager
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import ru.terrakok.cicerone.commands.Command
+import ru.vassuv.router.Navigator
+import ru.vassuv.router.Router
+import ru.vassuv.router.removeNavigator
+import ru.vassuv.router.setNavigator
 import ru.vassuv.startapp.App
 import ru.vassuv.startapp.R
 import ru.vassuv.startapp.fabric.FrmFabric
-import ru.vassuv.startapp.utils.atlibrary.BaseFragment
-import ru.vassuv.startapp.utils.routing.Navigator
-import ru.vassuv.startapp.utils.routing.Router
+import ru.vassuv.startapp.screen.BaseFragment
 import ru.vassuv.startapp.utils.UiListener
 import java.io.Serializable
 
@@ -34,6 +35,8 @@ class MainPresenter : MvpPresenter<MainView>() {
 
         navigator = createNavigator(fragmentManager)
 
+        App.uiListener = uiListener
+
         if (savedInstanceState == null) {
             onRunApplication()
         } else {
@@ -51,7 +54,6 @@ class MainPresenter : MvpPresenter<MainView>() {
 
         Router.onBackScreenListener = { }
 
-        Router.uiListener = uiListener
     }
 
     private fun createNavigator(fragmentManager: FragmentManager): Navigator {
@@ -90,11 +92,11 @@ class MainPresenter : MvpPresenter<MainView>() {
     }
 
     fun onResume() {
-        App.setNavigationHolder(navigator)
+        setNavigator(navigator)
     }
 
     fun onPause() {
-        App.resetNavigator()
+        removeNavigator()
     }
 
     private fun setScreenState() {

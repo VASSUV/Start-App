@@ -11,18 +11,16 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import kotlinx.android.synthetic.main.fragment_test1.*
 import ru.vassuv.startapp.R
 import ru.vassuv.startapp.fabric.FrmFabric
-import ru.vassuv.startapp.utils.atlibrary.BaseFragment
-import ru.vassuv.startapp.utils.routing.Router
+import ru.vassuv.startapp.screen.BaseFragment
+import ru.vassuv.router.Router
 import java.util.*
 import android.os.Build
 import android.transition.TransitionInflater
 import android.view.*
-import android.widget.CheckedTextView
-import android.widget.CompoundButton
-import android.widget.RadioButton
 import com.transitionseverywhere.*
 import com.transitionseverywhere.extra.Scale
 import org.jetbrains.anko.bundleOf
+import ru.vassuv.startapp.App
 
 
 class Test1Fragment : BaseFragment(), Test1View {
@@ -61,10 +59,10 @@ class Test1Fragment : BaseFragment(), Test1View {
 
     private fun initExample4() {
         button4Show.setOnClickListener{
-            Router.uiListener.showLoader()
+            App.uiListener?.showLoader()
         }
         button4Hide.setOnClickListener{
-            Router.uiListener.hideLoader()
+            App.uiListener?.hideLoader()
         }
     }
 
