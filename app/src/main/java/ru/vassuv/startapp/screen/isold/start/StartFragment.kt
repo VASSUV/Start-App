@@ -11,8 +11,10 @@ import ru.vassuv.startapp.screen.BaseFragment
 import android.support.v7.widget.LinearLayoutManager
 import android.transition.Transition
 import com.arellomobile.mvp.presenter.PresenterType
+import ru.vassuv.processor.annotation.Route
 import java.util.TreeSet
 
+@Route
 class StartFragment : BaseFragment(), StartView {
 
     @InjectPresenter(type = PresenterType.GLOBAL, tag = "globalStart")

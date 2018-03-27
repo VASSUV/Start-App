@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import ru.vassuv.startapp.R
 
 import com.arellomobile.mvp.presenter.InjectPresenter
+import ru.vassuv.processor.annotation.Route
 import ru.vassuv.startapp.screen.BaseFragment
 
+@Route
 class Test3Fragment : BaseFragment(), Test3View {
 
     @InjectPresenter

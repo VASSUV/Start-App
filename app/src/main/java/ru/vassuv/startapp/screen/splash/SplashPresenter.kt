@@ -6,8 +6,8 @@ import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
+import ru.vassuv.processor.FrmFabric
 import ru.vassuv.router.Router
-import ru.vassuv.startapp.fabric.FrmFabric
 
 @InjectViewState
 class SplashPresenter : MvpPresenter<SplashView>() {
@@ -22,7 +22,7 @@ class SplashPresenter : MvpPresenter<SplashView>() {
                 delay(500)
             }
 
-            Router.newRootScreen(FrmFabric.INTRO.name)
+            Router.newRootScreen(FrmFabric.INTRO)
         }
     }
 

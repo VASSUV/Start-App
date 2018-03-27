@@ -9,14 +9,14 @@ import android.widget.TextView
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import org.jetbrains.anko.bundleOf
+import ru.vassuv.processor.FrmFabric
 import ru.vassuv.router.Router
 import ru.vassuv.startapp.R
-import ru.vassuv.startapp.fabric.FrmFabric
 
 @InjectViewState
 class StartPresenter : MvpPresenter<StartView>() {
     val adapter = Adapter()
-    val list = arrayListOf(FrmFabric.SPLASH.name)
+    val list = arrayListOf(FrmFabric.TEST_1, FrmFabric.TEST_2, FrmFabric.TEST_3, FrmFabric.SPLASH, FrmFabric.INTRO)
 
     private var transitionNameCounter = 0
 

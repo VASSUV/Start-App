@@ -10,7 +10,6 @@ import android.support.v4.view.ViewCompat
 import com.arellomobile.mvp.presenter.InjectPresenter
 import kotlinx.android.synthetic.main.fragment_test1.*
 import ru.vassuv.startapp.R
-import ru.vassuv.startapp.fabric.FrmFabric
 import ru.vassuv.startapp.screen.BaseFragment
 import ru.vassuv.router.Router
 import java.util.*
@@ -20,9 +19,11 @@ import android.view.*
 import com.transitionseverywhere.*
 import com.transitionseverywhere.extra.Scale
 import org.jetbrains.anko.bundleOf
+import ru.vassuv.processor.FrmFabric
+import ru.vassuv.processor.annotation.Route
 import ru.vassuv.startapp.App
 
-
+@Route
 class Test1Fragment : BaseFragment(), Test1View {
 
     @InjectPresenter
@@ -71,11 +72,11 @@ class Test1Fragment : BaseFragment(), Test1View {
         button3.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 val name = ViewCompat.getTransitionName(button3)
-                Router.navigateToWithAnimate(FrmFabric.SPLASH.name, bundleOf("SHARED_NAME" to name)) {
+                Router.navigateToWithAnimate(FrmFabric.SPLASH, bundleOf("SHARED_NAME" to name)) {
                     addSharedElement(button3, name)
                 }
             } else {
-                Router.navigateTo(FrmFabric.SPLASH.name)
+                Router.navigateTo(FrmFabric.SPLASH)
             }
         }
     }

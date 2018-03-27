@@ -5,13 +5,13 @@ import android.support.design.widget.BottomNavigationView.OnNavigationItemSelect
 import android.support.v4.app.FragmentManager
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
+import ru.vassuv.processor.FrmFabric
 import ru.vassuv.router.Navigator
 import ru.vassuv.router.Router
 import ru.vassuv.router.removeNavigator
 import ru.vassuv.router.setNavigator
 import ru.vassuv.startapp.App
 import ru.vassuv.startapp.R
-import ru.vassuv.startapp.fabric.FrmFabric
 import ru.vassuv.startapp.screen.BaseFragment
 import ru.vassuv.startapp.utils.UiListener
 import java.io.Serializable
@@ -21,7 +21,7 @@ class MainPresenter : MvpPresenter<MainView>() {
 
     private var navigator: Navigator? = null
     private var fragmentManager: FragmentManager? = null
-    private var currentType = FrmFabric.EMPTY
+    private var currentType: String = ""
 
     private val changedFragmentListener = { setScreenState() }
 
@@ -45,7 +45,7 @@ class MainPresenter : MvpPresenter<MainView>() {
     }
 
     private fun onRunApplication() {
-        Router.newRootScreen(FrmFabric.SPLASH.name)
+        Router.newRootScreen(FrmFabric.SPLASH)
     }
 
     private fun initRouter(uiListener: UiListener) {
@@ -59,7 +59,7 @@ class MainPresenter : MvpPresenter<MainView>() {
     private fun createNavigator(fragmentManager: FragmentManager): Navigator {
         return object : Navigator(fragmentManager, R.id.fragment_container, changedFragmentListener) {
 
-            override fun createFragment(screenKey: String, data: Bundle) = FrmFabric.valueOf(screenKey).create(data)
+            override fun createFragment(screenKey: String, data: Bundle) = FrmFabric.createFragment(screenKey, data)
 
             override fun exit() {
             }
@@ -74,7 +74,7 @@ class MainPresenter : MvpPresenter<MainView>() {
         get() = OnNavigationItemSelectedListener { item ->
 
             fun startScreen(name: String): Boolean {
-                if(name != currentType.name)
+                if (name != currentType)
                     Router.newRootScreen(name)
                 return true
             }
@@ -102,13 +102,13 @@ class MainPresenter : MvpPresenter<MainView>() {
     private fun setScreenState() {
         val fragment: BaseFragment = currentFragment ?: return
 
-        val newType = FrmFabric.valueOf(fragment::class)
+        val newType = FrmFabric.valueOf(fragment)
 
         if (currentType == newType) return
 
         currentType = newType
 
-        viewState.setTitle(currentType.name)
+        viewState.setTitle(currentType)
         when (currentType) {
             FrmFabric.SPLASH -> {
                 viewState.hideBottomNavigatorView()
