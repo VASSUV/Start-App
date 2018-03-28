@@ -7,17 +7,23 @@ import ru.vassuv.startapp.App
 private val instance: SharedPreferences by lazy { PreferenceManager.getDefaultSharedPreferences(App.context) }
 
 interface ISharedData {
-    val name: String
+    val nameData: String
 
-    fun getString() = instance.getString(name, "")
-    fun getInt() = instance.getInt(name, 0)
-    fun getBoolean() = instance.getBoolean(name, false)
-    fun getLong() = instance.getLong(name, 0)
+    fun getString() = instance.getString(nameData, "")
+    fun getInt() = instance.getInt(nameData, 0)
+    fun getBoolean() = instance.getBoolean(nameData, false)
+    fun getLong() = instance.getLong(nameData, 0)
 
-    fun saveString(value: String) = instance.edit().putString(name, value).apply()
-    fun saveInt(value: Int) = instance.edit().putInt(name, value).apply()
-    fun saveBoolean(value: Boolean) = instance.edit().putBoolean(name, value).apply()
-    fun saveLong(value: Long) = instance.edit().putLong(name, value).apply()
+    fun saveString(value: String) = instance.edit().putString(nameData, value).apply()
+    fun saveInt(value: Int) = instance.edit().putInt(nameData, value).apply()
+    fun saveBoolean(value: Boolean) = instance.edit().putBoolean(nameData, value).apply()
+    fun saveLong(value: Long) = instance.edit().putLong(nameData, value).apply()
 
-    fun remove() = instance.edit().remove(name).apply()
+    fun remove() = instance.edit().remove(nameData).apply()
+}
+
+enum class SharedData : ISharedData{
+    LOGIN;
+
+    override val nameData: String = name
 }

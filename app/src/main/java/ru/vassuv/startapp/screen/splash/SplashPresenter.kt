@@ -2,9 +2,33 @@ package ru.vassuv.startapp.screen.splash
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import ru.vassuv.startapp.screen.splash.SplashView
+import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.experimental.launch
+import ru.vassuv.processor.FrmFabric
+import ru.vassuv.router.Router
 
 @InjectViewState
 class SplashPresenter : MvpPresenter<SplashView>() {
+    private lateinit var job: Job
+
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
+
+        job = launch(UI) {
+            (5 downTo 1).forEach {
+                viewState.setText(it.toString())
+                delay(500)
+            }
+
+            Router.newRootScreen(FrmFabric.INTRO)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        job.cancel()
+    }
 
 }
