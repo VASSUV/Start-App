@@ -41,6 +41,7 @@ class MainActivity : MvpAppCompatActivity(), MainView {
     }
 
     override fun onBackPressed() {
+
         val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (fragment != null && fragment is BaseFragment) {
             fragment.onBackPressed()

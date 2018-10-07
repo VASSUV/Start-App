@@ -2,13 +2,13 @@ package ru.vassuv.startapp.activity.main
 
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView.OnNavigationItemSelectedListener
-import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import ru.vassuv.startapp.App
 import ru.vassuv.startapp.R
 import ru.vassuv.startapp.fabric.FrmFabric
+import ru.vassuv.startapp.utils.atlibrary.AnimationList
 import ru.vassuv.startapp.utils.atlibrary.BaseFragment
 import ru.vassuv.startapp.utils.atlibrary.Navigator
 import ru.vassuv.startapp.utils.atlibrary.Router
@@ -27,8 +27,8 @@ class MainPresenter : MvpPresenter<MainView>() {
         get() = OnNavigationItemSelectedListener { item ->
 
             fun startScreen(name: String): Boolean {
-                if(name != currentType.name)
-                    Router.newRootScreen(name)
+                if (name != currentType.name)
+                    Router.navigateTo(name)
                 return true
             }
 
@@ -74,18 +74,25 @@ class MainPresenter : MvpPresenter<MainView>() {
         Router.onBackScreenListener = { }
 
         navigator = object : Navigator(fragmentManager, R.id.fragment_container, changedFragmentListener) {
-            override fun createFragment(screenKey: String, data: Bundle): Fragment? {
-                return FrmFabric.valueOf(screenKey).create(data)
-            }
+            private val animationRightList = AnimationList(R.anim.enter_from_right,
+                    R.anim.exit_to_left,
+                    R.anim.enter_from_left,
+                    R.anim.exit_to_right)
+            private val animationLeftList = AnimationList(R.anim.enter_from_left,
+                    R.anim.exit_to_right,
+                    R.anim.enter_from_right,
+                    R.anim.exit_to_left)
 
-            override fun showSystemMessage(message: String) {
-            }
+            override fun getAnimationList(screenKey: String?) = animationRightList
 
-            override fun exit() {
-            }
+            override fun openFragment(fragmentPosition: Int, name: String)  = Unit
 
-            override fun openFragment(name: String) {
-            }
+            override fun createFragment(screenKey: String, data: Bundle) = FrmFabric.valueOf(screenKey).create(data)
+
+            override fun exit() = Unit
+
+
+
         }
 
         if (savedInstanceState == null) {

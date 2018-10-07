@@ -34,12 +34,12 @@ class IntroFragment : BaseFragment(), IntroView {
         return inflater.inflate(R.layout.fragment_intro, container, false)
     }
 
-    private lateinit var progress: ProgressBar
+    private var progress: ProgressBar? = null
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        progress = activity.findViewById(R.id.progress)
+        progress = activity?.findViewById(R.id.progress)
     }
 
     private lateinit var job: Job
@@ -49,11 +49,11 @@ class IntroFragment : BaseFragment(), IntroView {
 
         job = launch(UI) {
             try {
-                progress.visibility = View.VISIBLE
+                progress?.visibility = View.VISIBLE
                 val result = responseJson("https://vassuv.ru/api/v1/login/", hashMapOf())
                 textView.text = result.toString()
             } finally {
-                progress.visibility = View.GONE
+                progress?.visibility = View.GONE
             }
         }
     }
